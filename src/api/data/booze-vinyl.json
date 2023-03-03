@@ -1,0 +1,517 @@
+[
+    {
+        "master": 205153,
+        "artist": "Aretha Franklin",
+        "album": "I Never Loved a Man (The Way I Love You)"
+    },
+    {
+        "master": 20090,
+        "artist": "Beastie Boys",
+        "album": "License to Ill"
+    },
+    {
+        "master": 44998,
+        "artist": "Beck",
+        "album": "Odelay"
+    },
+    {
+        "master": 34486,
+        "artist": "Björk",
+        "album": "Debut"
+    },
+    {
+        "master": 47744,
+        "artist": "Joni Mitchell",
+        "album": "Blue"
+    },
+    {
+        "master": 607316,
+        "artist": "Bob Marley and the Wailers",
+        "album": "Legend"
+    },
+    {
+        "master": 64620,
+        "artist": "Buena Vista Social Club",
+        "album": "Buena Vista Social Club"
+    },
+    {
+        "master": 27795,
+        "artist": "Johnny Cash",
+        "album": "At Folsom Prison"
+    },
+    {
+        "master": 552814,
+        "artist": "The Clash",
+        "album": "London Calling"
+    },
+    {
+        "master": 8357,
+        "artist": "De La Soul",
+        "album": "3 Feet High and Rising"
+    },
+    {
+        "master": 31755,
+        "artist": "The Cure",
+        "album": "Disintegration"
+    },
+    {
+        "master": 96471,
+        "artist": "Frank Sinatra",
+        "album": "In the Wee Small Hours"
+    },
+    {
+        "master": 1839031,
+        "artist": "Al Green",
+        "album": "Greatest Hits"
+    },
+    {
+        "master": 165760,
+        "artist": "Iggy Pop",
+        "album": "Lust for Life"
+    },
+    {
+        "master": 4805,
+        "artist": "Joy Division",
+        "album": "Unknown Pleasures"
+    },
+    {
+        "master": 877619,
+        "artist": "Lady Gaga",
+        "album": "The Fame Monster"
+    },
+    {
+        "master": 57279,
+        "artist": "Lauryn Hill",
+        "album": "The Miseducation of Lauryn Hill"
+    },
+    {
+        "master": 3832,
+        "artist": "Leonard Cohen",
+        "album": "Songs of Leonard Cohen"
+    },
+    {
+        "master": 529861,
+        "artist": "Nirvana",
+        "album": "MTV Unplugged In New York"
+    },
+    {
+        "master": 43758,
+        "artist": "The Pogues",
+        "album": "Rum Sodomy & the Lash"
+    },
+    {
+        "master": 474955,
+        "artist": "The Smiths",
+        "album": "The Queen Is Dead"
+    },
+    {
+        "master": 57830,
+        "artist": "R.E.M.",
+        "album": "Automatic for the People"
+    },
+    {
+        "master": 39341,
+        "artist": "Ramones",
+        "album": "Ramones"
+    },
+    {
+        "master": 102667,
+        "artist": "Robert Johnson",
+        "album": "King of the Delta Blues Singers"
+    },
+    {
+        "master": 37401,
+        "artist": "Run-D.M.C.",
+        "album": "Raising Hell"
+    },
+    {
+        "master": 30129,
+        "artist": "Snoop Dogg",
+        "album": "Doggystyle"
+    },
+    {
+        "master": 45922,
+        "artist": "A Tribe Called Quest",
+        "album": "Low End Theory"
+    },
+    {
+        "master": 13918,
+        "artist": "Tom Waits",
+        "album": "Closing Time"
+    },
+    {
+        "master": 210489,
+        "artist": "U2",
+        "album": "The Joshua Tree"
+    },
+    {
+        "master": 3211,
+        "artist": "Vampire Weekend",
+        "album": "Vampire Weekend"
+    },
+    {
+        "master": 1541584,
+        "artist": "The Velvet Underground",
+        "album": "The Velvet Underground & Nico"
+    },
+    {
+        "master": 10363,
+        "artist": "Wilco",
+        "album": "Yankee Hotel Foxtrot"
+    },
+    {
+        "master": 308861,
+        "artist": "Hank Williams",
+        "album": "40 Greatest Hits"
+    },
+    {
+        "master": 87369,
+        "artist": "Lucinda Williams",
+        "album": "Car Wheels on a Gravel Road"
+    },
+    {
+        "master": 23443,
+        "artist": "Various",
+        "album": "Saturday Night Fever (The Original Movie Sound Track)"
+    },
+
+    {
+        "master": 24497,
+        "artist": "The Jimi Hendrix Experience",
+        "album": "Are You Experienced"
+    },
+    {
+        "master": 722350,
+        "artist": "Janis Joplin",
+        "album": "Pearl"
+    },
+    {
+        "master": 36627,
+        "artist": "Aerosmith",
+        "album": "Toys In The Attic"
+    },
+    {
+        "master": 40109,
+        "artist": "Patti Smith",
+        "album": "Horses"
+    },
+    {
+        "master": 30445,
+        "artist": "Sex Pistols",
+        "album": "Never Mind The Bollocks Here's The Sex Pistols"
+    },
+    {
+        "master": 455505,
+        "artist": "Elvis Costello & The Attractions",
+        "album": "This Year's Model"
+    },
+    {
+        "master": 16764,
+        "artist": "Pixies",
+        "album": "Doolittle"
+    },
+    {
+        "master": 74304,
+        "artist": "Tom Petty",
+        "album": "Full Moon Fever"
+    },
+    {
+        "master": 21660,
+        "artist": "Pavement",
+        "album": "Slanted And Enchanted"
+    },
+    {
+        "master": 31513,
+        "artist": "Alanis Morissette",
+        "album": "Jagged Little Pill"
+    },
+    {
+        "master": 12347,
+        "artist": "The Strokes",
+        "album": "Is This I"
+    },
+    {
+        "master": 1945,
+        "artist": "Arcade Fire",
+        "album": "Funeral"
+    },
+    {
+        "master": 112689,
+        "artist": "Dick Dale & His Del-Tones",
+        "album": "Surfer's Choice"
+    },
+    {
+        "master": 112689,
+        "artist": "Dick Dale And His Del-Tones",
+        "album": "Surfer's Choice"
+    },
+    {
+        "master": 78501,
+        "artist": "Sly & The Family Stone",
+        "album": "Stand!"
+    },
+    {
+        "master": 4010,
+        "artist": "Kraftwerk",
+        "album": "Die Mensch·Maschine"
+    },
+    {
+        "master": 4010,
+        "artist": "Kraftwerk",
+        "album": "Die Mensch"
+    },
+    {
+        "master": 4010,
+        "artist": "Kraftwerk",
+        "album": "The Man Machine"
+    },
+    {
+        "master": 53856,
+        "artist": "The B-52's",
+        "album": "The B-52's"
+    },
+    {
+        "master": 91767,
+        "artist": "Tina Turner",
+        "album": "Private Dancer"
+    },
+    {
+        "master": 79648,
+        "artist": "Janet Jackson",
+        "album": "Control"
+    },
+    {
+        "master": 317795,
+        "artist": "Pet Shop Boys",
+        "album": "Please"
+    },
+    {
+        "master": 64204,
+        "artist": "Gipsy Kings",
+        "album": "Gipsy Kings"
+    },
+    {
+        "master": 18080,
+        "artist": "Depeche Mode",
+        "album": "Violator"
+    },
+    {
+        "master": 12249,
+        "artist": "ABBA",
+        "album": "Gold"
+    },
+    {
+        "master": 12249,
+        "artist": "ABBA",
+        "album": "Gold (Greatest Hits)"
+    },
+    {
+        "master": 33951,
+        "artist": "Dr. Dre",
+        "album": "The Chronic"
+    },
+    {
+        "master": 25303,
+        "artist": "Wu-Tang Clan",
+        "album": "Enter The Wu-Tang"
+    },
+    {
+        "master": 57970,
+        "artist": [
+            "The Notorious BIG",
+            "The Notorious B.I.G.*",
+            "Notorious B.I.G."
+        ],
+        "album": "Ready To Die"
+    },
+    {
+        "master": 82202,
+        "artist": "Moby",
+        "album": "Play"
+    },
+    {
+        "master": 27443,
+        "artist": "Britney Spears",
+        "album": "Oops!...I Did It Again"
+    },
+    {
+        "master": 46989,
+        "artist": "Jay-Z",
+        "album": "The Blueprint"
+    },
+    {
+        "master": 42446,
+        "artist": "LCD Soundsystem",
+        "album": "Sound Of Silver"
+    },
+    {
+        "master": 992029,
+        "artist": "Beyoncé",
+        "album": "Lemonade"
+    },
+    {
+        "master": 212735,
+        "artist": "The Supremes",
+        "album": "Where Did Our Love Go"
+    },
+    {
+        "master": 29947,
+        "artist": "The Byrds",
+        "album": "Sweetheart Of The Rodeo"
+    },
+    {
+        "master": 13924,
+        "artist": "Nick Drake",
+        "album": "Five Leaves Left"
+    },
+    {
+        "master": 14520,
+        "artist": "Van Morrison",
+        "album": "Moondance"
+    },
+    {
+        "master": 18489,
+        "artist": "The Grateful Dead",
+        "album": "Workingman's Dead"
+    },
+    {
+        "master": 460976,
+        "artist": "Dolly Parton",
+        "album": "Coat Of Many Colors"
+    },
+    {
+        "master": 97786,
+        "artist": "Willie Nelson",
+        "album": "Red Headed Stranger"
+    },
+    {
+        "master": 38722,
+        "artist": "Fleetwood Mac",
+        "album": "Rumours"
+    },
+    {
+        "master": 57029,
+        "artist": "Billy Joel",
+        "album": "The Stranger"
+    },
+    {
+        "master": 58313,
+        "artist": "Roxy Music",
+        "album": "Avalon"
+    },
+    {
+        "master": 51607,
+        "artist": "Whitney Houston",
+        "album": "Whitney Houston"
+    },
+    {
+        "master": 35759,
+        "artist": "Peter Gabriel",
+        "album": "So"
+    },
+    {
+        "master": 105802,
+        "artist": "Tracy Chapman",
+        "album": "Tracy Chapman"
+    },
+    {
+        "master": 5104,
+        "artist": "Cocteau Twins",
+        "album": "Heaven Or Las Vegas"
+    },
+    {
+        "master": 110938,
+        "artist": "Sade",
+        "album": "Love Deluxe"
+    },
+    {
+        "master": 5542,
+        "artist": "Portishead",
+        "album": "Dummy"
+    },
+    {
+        "master": 1622,
+        "artist": "AIR",
+        "album": "Moon Safari"
+    },
+    {
+        "master": 92309,
+        "artist": "Manu Chao",
+        "album": "Clandestino"
+    },
+    {
+        "master": 83982,
+        "artist": "Various",
+        "album": "O Brother, Where Art Thou?"
+    },
+    {
+        "master": 156217,
+        "artist": "Loretta Lynn",
+        "album": "Van Lear Rose"
+    },
+    {
+        "master": 14863,
+        "artist": "Sufjan Stevens",
+        "album": "Illinois"
+    },
+    {
+        "master": 454284,
+        "artist": "Frank Ocean",
+        "album": "Channel Orange"
+    },
+    {
+        "master": 664824,
+        "artist": "The War On Drugs",
+        "album": "Lost In The Dream"
+    },
+    {
+        "master": 173462,
+        "artist": "Ella Fitzgerald And Louis Armstrong",
+        "album": "Ella And Louis"
+    },
+    {
+        "master": 103290,
+        "artist": "Howlin' Wolf",
+        "album": "Moanin' In The Moonlight"
+    },
+    {
+        "master": 141586,
+        "artist": "Ray Charles",
+        "album": "Modern Sounds In Country And Western Music"
+    },
+    {
+        "master": 147633,
+        "artist": "Nat King Cole",
+        "album": "The Christmas Song"
+    },
+    {
+        "master": 85178,
+        "artist": "Stan Getz",
+        "album": "Getz"
+    },
+    {
+        "master": 32287,
+        "artist": "John Coltrane",
+        "album": "A Love Supreme"
+    },
+    {
+        "master": 77378,
+        "artist": "Nina Simone",
+        "album": "I Put A Spell On You"
+    },
+    {
+        "master": 30690,
+        "artist": "Stereolab",
+        "album": "Emperor Tomato Ketchup"
+    },
+    {
+        "master": 608,
+        "artist": "St Germain",
+        "album": "Tourist"
+    },
+    {
+        "master": 850448,
+        "artist": "Leon Bridges",
+        "album": "Coming Home"
+    }
+]
