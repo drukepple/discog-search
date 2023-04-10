@@ -1,17 +1,35 @@
-const colorize = require('colorize'); // also try `ansicolor`?
+import {log} from 'console-log-colors';
+// import * as util from 'disconnect/lib/util';
 const util = require('disconnect/lib/util');
-const money = require('money');
-const client = require('./client');
-const request = require('./request');
-const getCached = require('./cache');
-const fs = require('fs');
-const path = require('path');
-const appDir = path.dirname(require.main.filename);
-const socket = require('./socket-server');
+import money from 'money';
+import client from './client';
+import request from './request';
+import getCached from './cache';
+import fs from 'fs';
+import path from 'path';
+import {sendProgressUpdate} from './socket-server';
 
-const clr = colorize.ansify;
-const market = client.marketplace();
-var cconsole = colorize.console;
+const appDir = path.dirname(require.main?.filename || '');
+console.log('--------------------------\nappDir:', appDir);
+
+type ListingAddOn = {
+  usdPrices: {
+    price: string | number;
+    shipping: string | number;
+    total: string | number;
+  }
+}
+export type SearchResults = {
+  results: Listing[] | (Listing & ListingAddOn)[],
+  unfinished: boolean;
+  totalPages: number;
+}
+export type FilterResults = {
+  unfinished: boolean;
+  totalPages: number;
+  artists: Record<string, Listing[]>;
+  originalCurrency: string; // Currency
+}
 
 async function init() {
   const rates = await getCached('_exchange-rates.json', 24*60*60*1000, false, async () => {
@@ -20,29 +38,23 @@ async function init() {
     const rates = JSON.parse(ratesResult);
     return rates;
   })
-  // console.log(rates);
   money.base = rates.base;
   money.rates = rates.rates;
   console.log('Exchange rates retrieved', rates.base, Object.keys(money.rates).length);
 }
 init();
 
-// client.get({ url: util.addParams('/users/drtone/inventory', obj), authLevel: 1 }).then(r => {
-//   console.log(r.pagination);
-//   console.log(r.listings[0]);
-// });
 
-function normalize(str) {
+function normalize(str: string) {
   return str.toLowerCase().replace(/^(a|the)/, '').replace(/[^a-z0-9\s]+/, '')
 }
-function match(str1, str2) {
+function match(str1: string, str2: string) {
   return normalize(str1) === normalize(str2);
 }
 
 
-artistSearch = require('../data/artist-search');
-const booze = JSON.parse(fs.readFileSync(path.join(appDir, 'data', 'booze-vinyl.json')).toString())
-// console.log(booze);
+const artistSearch = require('./data/artist-search');
+const booze = JSON.parse(fs.readFileSync(path.join(appDir, 'src', 'api', 'data', 'booze-vinyl.json')).toString())
 
 let hasPrintedOneListingData = false;
 
@@ -50,11 +62,11 @@ let hasPrintedOneListingData = false;
  * Prints the inventory to the console.
  * @param {Object} listingsByArtist
  */
-function printListings(listingsByArtist) {
+function printListings(listingsByArtist: FilterResults) {
   console.log(listingsByArtist);
-  Object.keys(listingsByArtist).forEach(artist => {
-    const artistResults = listingsByArtist[artist];
-    cconsole.log(`#magenta[${artist} ------------------------------]`);
+  Object.keys(listingsByArtist.artists).forEach(artist => {
+    const artistResults = listingsByArtist.artists[artist];
+    log.magenta(`${artist} ------------------------------`);
     console.log(artistResults.length + " results");
     console.log("");
     artistResults.forEach(listing => {
@@ -62,25 +74,18 @@ function printListings(listingsByArtist) {
         console.log(listing);
         hasPrintedOneListingData = true;
       }
-      cconsole.log(`#green[${listing.release.title}] (${listing.release.year})`);
+      log.green(`${listing.release.title} (${listing.release.year})`);
       console.log(`${listing.condition} / ${listing.sleeve_condition}`);
       const price = listing.price.value;
       const shipping = listing.shipping_price.value;
       console.log(`$${price} (+${shipping}: ${price + shipping})`);
-      cconsole.log(`#yellow[${listing.comments}]`);
-      cconsole.log(`#blue[${listing.uri}]`);
+      log.yellow(`${listing.comments}`);
+      log.blue(`${listing.uri}`);
       console.log("");
     })
   });
 }
 
-// If called like `node src/marketplace.js some-seller, run as a cli command.
-if (process.argv[2]) {
-  console.log('Getting inventory for ' + process.argv[2]);
-  filterAllListings(process.argv[2]).then(result => {
-    printListings(result);
-  })
-}
 
 class DiscogsMarketplace {
   abort = false;
@@ -89,11 +94,12 @@ class DiscogsMarketplace {
     this.abort = true;
   }
 
-  getAllListings(seller, noCache=false) {
+  async getAllListings(seller: string, noCache=false):Promise<SearchResults> {
     const oneDayInMinutes = 24 * 60 * 60;
-    return getCached(`${seller}/catalog-full`, oneDayInMinutes, noCache, () => {
-      let allResults = []
-      function getOnePage(page) {
+    // TODO: make getCached typed/generic
+    const cached = await getCached(`${seller}/catalog-full`, oneDayInMinutes, noCache, () => {
+      let allResults: Listing[] = []
+      function getOnePage(page: number) {
         const obj = {
           per_page: 100,
           page,
@@ -103,7 +109,8 @@ class DiscogsMarketplace {
         })
       }
       return new Promise((resolve, reject) => {
-        const getOnePageThen = (r) => {
+        const getOnePageThen = (r:InventorySearch):Promise<SearchResults> => {
+          console.log('------------------ then...', r.listings.length)
           allResults = allResults.concat(r.listings);
           const pages = r.pagination
           if (pages.page === pages.pages) {
@@ -111,60 +118,60 @@ class DiscogsMarketplace {
           } else {
             if (this.abort || pages.pages > 100 || pages.page === 100) {
               console.log('-- Aborted --');
-              resolve({results:allResults, unfinished:true, totalPages: pages.pages});
-              return;
+             resolve({results:allResults, unfinished:true, totalPages: pages.pages});
+            } else {
+              const nextPage  = pages.page + 1;
+              console.log(`--- getting page ${nextPage} of ${pages.pages}`);
+              sendProgressUpdate(nextPage, pages.pages, 'TODO');
+              return getOnePage(nextPage).then(getOnePageThen);
             }
-            // if (this.abort) {
-            //   resolve({results:allResults, unfinished: true, totalPages: pages.pages});
-            //   return;
-            // }
-            const nextPage  = pages.page + 1;
-            console.log(`--- getting page ${nextPage} of ${pages.pages}`);
-            socket.sendProgressUpdate(nextPage, pages.pages);
-            return getOnePage(nextPage).then(getOnePageThen);
           }
+          return Promise.resolve({results:allResults, unfinished:false, totalPages:pages.pages});
         }
         console.log(`--- getting page 1 of ?`)
         getOnePage(1).then(getOnePageThen);
       });
     })
+    // console.log('cached ----------------')
+    // console.log(cached);
+    // console.log('-------------------------')
+    return cached;
   }
 
-
-  /**
-   * Gets all inventory for a seller (can take a while) and then filters it by
-   * artists as defined in `artistSearch`
-   * @param {string} seller
-   * @returns
-   */
-  filterAllListings(seller, noCache=false) {
-    const listingsByArtist = {};
+  async filterAllListings(seller: string, noCache=false):Promise<FilterResults> {
+    const listingsByArtist:FilterResults = {
+      unfinished: false,
+      artists: {},
+      originalCurrency: '',
+      totalPages: 0,
+    };
     // Used for post-processing, easier to loop over, and not returned.
-    let listingsFlatList = [];
-    return this.getAllListings(seller, noCache).then(result => {
-      listingsByArtist.unfinished = result.unfinished;
-      listingsByArtist.totalPages = result.totalPages;
-      listingsByArtist.artists = {}
-      console.log('All results;', result.results.length);
-      // console.log('--------------------------')
-      // console.log(result.results[0]);
-      // console.log('--------------------------')
-      const vinyl = result.results.filter(r => {
+    let listingsFlatList:Listing[] = [];
+
+    try {
+      const allListings = await this.getAllListings(seller, noCache);
+      // return this.getAllListings(seller, noCache).then(result => {
+      listingsByArtist.unfinished = allListings.unfinished;
+      listingsByArtist.totalPages = allListings.totalPages;
+
+      // Filter out results that aren't vinyl.
+      const vinyl = allListings.results.filter(r => {
         const f = r.release.format
         // console.log(f);
         return f.indexOf('Vinyl') > -1 || f.indexOf('LP') > -1 || f.indexOf('7"') > -1
       });
-      console.log('LP results:', vinyl.length);
+      console.log('All results:  ', allListings.results.length);
+      console.log('Vinyl results:', vinyl.length);
 
       // Booze and vinyl
-      booze.forEach(entry => {
+      booze.forEach((entry:{master:number, artist: string|string[], album: string}) => {
         if (!entry) {
           console.log('Found null!');
           return;
         }
         const artists = typeof entry.artist === 'string' ? [entry.artist] : entry.artist
         const artistKey = artists[0];
-        artists.forEach(artist => {
+        artists.forEach((artist:string) => {
           // console.log(artist);
           const artistFilter = vinyl.filter(r => {
             return match(r.release.artist, artist) && match(r.release.title, entry.album);
@@ -181,7 +188,7 @@ class DiscogsMarketplace {
       // console.log(listingsByArtist.artists['The Jimi Hendrix Experience'])
 
       // General artist interest
-      artistSearch.forEach(artist => {
+      artistSearch.forEach((artist:string) => {
         // console.log(artist);
         const artistFilter = vinyl.filter(r => r.release.artist.toLowerCase() === artist.toLowerCase()).sort((a,b) => {
           const albumA = a.release.title.toLowerCase().replace(/^(a|the) /, '');
@@ -201,26 +208,25 @@ class DiscogsMarketplace {
 
       // Keeping a flat list of every listing makes it easier to post-process.
       // This is not returned.
-      listingsFlatList.forEach(listing => {
+      listingsFlatList.forEach(l => {
+        const listing = l as Listing & ListingAddOn;
         // Fix URLs
         listing.release.resource_url = listing.release.resource_url
           .replace('api.discogs', 'www.discogs')
           .replace('/releases/', '/release/');
+
         // Try to make reprints more obvious
         listing.release.format = listing.release.format
           .replace(/\bRE\b/, '<span class="reissue">RE</span>')
           .replace(/\bRP\b/, '<span class="reissue">RP</span>')
           .replace(/\b2nd\b/, '<span class="reissue">RP</span>');
+
         // Convert prices to USD
-        // console.log(listing.price.currency, listing.shipping_price, listing.original_shipping_price);
-
-        // if (listing.release.artist === 'David Bowie') {
-        //   console.log('-----------')
-        //   console.log(listing);
-        //   console.log('-----------')
-        // }
-
-        listing.usdPrices = {};
+        listing.usdPrices = {
+          price: 0,
+          shipping: 0,
+          total: 0,
+        };
         if (listing.original_price.converted) {
           listing.usdPrices.price = listing.original_price.converted.value;
         } else {
@@ -245,19 +251,34 @@ class DiscogsMarketplace {
         }
       });
       listingsByArtist.originalCurrency = listingsFlatList[0]?.price.currency ?? 'unknown';
+      console.log('===================')
+      console.log(listingsByArtist);
+      console.log('===================')
 
       return listingsByArtist;
-    }).catch(err => {
+    } catch(err) {
       console.error('--------------------------------');
       console.error('ERROR GETTING LISTINGS:');
       console.error(err);
       console.error('--------------------------------');
-    });
+      return listingsByArtist;
+    }
   }
 }
 
-module.exports = DiscogsMarketplace;
+export default DiscogsMarketplace;
 
+
+
+// If called like `node src/marketplace.js cli some-seller, run as a cli command.
+if (process.argv[2] === 'cli') {
+  console.log('Getting inventory for ' + process.argv[3]);
+  console.log(process.argv);
+  const marketplace = new DiscogsMarketplace();
+  marketplace.filterAllListings(process.argv[3]).then(result => {
+    printListings(result);
+  })
+}
 
 
 /* LISTING DATA:
