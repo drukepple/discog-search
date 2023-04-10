@@ -1,9 +1,9 @@
-const WSS_PORT = 8000;
-const wss = require('websocket').server;
-const http = require('http');
+import http from 'http';
+import {server as wss} from 'websocket';
+const WSS_PORT = 8008;
 
 const server = http.createServer();
-server.listen(WSS_PORT);
+// server.listen(WSS_PORT);
 
 const wsServer = new wss({
   httpServer: server,
@@ -13,7 +13,7 @@ const wsServer = new wss({
 const clients = {};
 // let connection;
 
-const getUniqueId = () => {
+export const getUniqueId = () => {
   const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16);
   return s4() + s4() + '-' + s4();
 };
@@ -41,7 +41,7 @@ wsServer.on('request', request => {
 });
 
 
-function sendProgressUpdate(page, totalPages, connectionId) {
+export function sendProgressUpdate(page, totalPages, connectionId) {
   const connection = clients[connectionId];
   console.log('send prog update on', connectionId)
   if (!connection) { return; console.log('No socket connection');}
@@ -53,9 +53,3 @@ function sendProgressUpdate(page, totalPages, connectionId) {
     progress: page/totalPages,
   }));
 }
-
-
-module.exports = {
-  sendProgressUpdate,
-  getUniqueId,
-};
