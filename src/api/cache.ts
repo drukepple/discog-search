@@ -1,6 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const appDir = path.dirname(require.main.filename);
+import fs from 'fs';
+import path from 'path';
+
+const appDir = path.dirname(require.main?.filename ?? '');
+console.log('CACHE -----------------------------\nappDir:', appDir);
 
 const removeDir = function (path) {
   if (fs.existsSync(path)) {
@@ -22,12 +24,13 @@ const removeDir = function (path) {
     console.log("Directory path not found.")
   }
 }
-const mkdir_p = fsPath => {
-  dirs = fsPath.split(path.sep);
-  check = [];
+const mkdir_p = (fsPath:string) => {
+  console.log('*****', fsPath)
+  const dirs = fsPath.split(path.sep);
+  const check: string[] = [];
   dirs.forEach(dir => {
     check.push(dir);
-    checkpath = check.join(path.sep);
+    const checkpath = check.join(path.sep);
     if (dir !== '.' && dir !== '..' && dir !== '') {
       // console.log('> checkpath:', checkpath)
       if (!fs.existsSync(checkpath)) {
@@ -45,7 +48,7 @@ const mkdir_p = fsPath => {
  * @param {number} ttl TTL in MINUTES
  * @param {function} fetchData Function that returns a Promise that returns the data to cache, if the cache doesn't exist or has expired.
  */
-async function getCached(key, ttl, noCache, fetchData) {
+export default async function getCached(key, ttl, noCache, fetchData) {
   const now = new Date()//.toISOString();
   const cacheDir = path.join(appDir, 'public', 'cache', key);
   // console.log('> cacheDir:', cacheDir);
@@ -96,5 +99,3 @@ async function getCached(key, ttl, noCache, fetchData) {
   fs.writeFileSync(filename, JSON.stringify(dataToSave, null, 4));
   return Promise.resolve(dataToSave);
 }
-
-module.exports = getCached;
