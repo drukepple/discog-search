@@ -1,3 +1,5 @@
+import styles from '@/styles/ProgressOverlay.module.css';
+
 export default function ProgressOverlay() {
   return <div id="progress-overlay">
     <div id="progress-info">Loading...</div>

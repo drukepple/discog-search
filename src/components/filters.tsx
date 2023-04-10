@@ -1,13 +1,7 @@
-import { MouseEvent, useState } from "react"
+import { artistDisplayStateSelector, displayStateAtom, FilterState, FiltersState, FilterKeys } from "@/state/listings";
+import { ChangeEvent, MouseEvent, useState } from "react"
+import { useRecoilState } from "recoil";
 
-type FilterKeys = 'mint' | 'nearMint' | 'veryGoodPlus' | 'veryGood' | 'goodPlus' | 'good' | 'fair'
-  | 'reissue' | 'comp' | 'single' | 'all';
-type FilterNames = 'M' | 'NM' | 'VG+' | 'VG' | 'G+' | 'G' | 'F'
-  | 'RE' | 'Comp' | 'Single' | 'All';
-type FilterState = {
-  name: FilterNames;
-  key: FilterKeys;
-}
 
 const styles = {
   filterRow: {
@@ -26,21 +20,35 @@ const styles = {
   },
 }
 
-export default function Filters() {
+export const filterNameToKeyMap: Record<string, FilterKeys> = {
+  'Mint (M)': 'mint',
+  'Near Mint (NM or M-)': 'nearMint',
+  'Very Good Plus (VG+)': 'veryGoodPlus',
+  'Very Good (VG)': 'veryGood',
+}
 
-  const [filterState, setFilterState] = useState<Record<FilterKeys, boolean>>({
-    mint: true,
-    nearMint: true,
-    veryGoodPlus: true,
-    veryGood: true,
-    goodPlus: true,
-    good: true,
-    fair: false,
-    reissue: true,
-    comp: false,
-    single: false,
-    all: true,
-  })
+type FiltersProps = {
+  // onChange: (filters: FiltersState) => void;
+  artist?: string,
+}
+export default function Filters({artist='GLOBAL'}:FiltersProps) {
+
+  const [displayState, setDisplayState] = useRecoilState(displayStateAtom);
+  const [artistDisplay, setArtistDisplay] = useRecoilState(artistDisplayStateSelector(artist))
+  const stateInUse = artist === 'GLOBAL' ? displayState : artistDisplay;
+  // const [filterState, setFilterState] = useState<FiltersState>({
+  //   mint: true,
+  //   nearMint: true,
+  //   veryGoodPlus: true,
+  //   veryGood: true,
+  //   goodPlus: true,
+  //   good: true,
+  //   fair: false,
+  //   reissue: true,
+  //   comp: false,
+  //   single: false,
+  //   all: true,
+  // })
 
   const nameToKeyMap:FilterState[] = [
     {name: 'M', key: 'mint'},
@@ -56,18 +64,41 @@ export default function Filters() {
     {name: 'All', key: 'all'},
   ]
 
-  const handleClick = (key:string, filter: boolean) => {
+  const handleClick = (event:ChangeEvent<HTMLInputElement>, key:string, filter: boolean) => {
     console.log(key, filter);
-    const state = {
-      ...filterState,
-      [key]: filter,
+    if (artist === 'GLOBAL') {
+      console.log('GLOBAL')
+      const state = {
+        ...displayState,
+        filters: {
+          ...displayState.filters,
+          [key]: filter,
+        }
+      }
+      console.log(state);
+      setDisplayState(state);
+    } else {
+      console.log('ARTIST:', artist);
+      setArtistDisplay({
+        ...artistDisplay,
+        filters: {
+          ...artistDisplay.filters,
+          [key]: filter,
+        }
+      })
     }
-    setFilterState(state);
+    // onChange(state);
+    // event.stopPropagation();
+    // event.preventDefault();
   }
 
   return <div id="control-bar" style={styles.filterRow}>
+    {/* <pre>{JSON.stringify(stateInUse.filters, null, 4)}</pre> */}
     {nameToKeyMap.map(x => <label key={x.key} style={styles.filterItem}>
-      <input type="checkbox" onChange={(e) => handleClick(x.key, e.target.checked)} checked={filterState[x.key]} style={styles.filterLabel} />
+      <input type="checkbox"
+             onChange={(e) => handleClick(e, x.key, e.target.checked)}
+             checked={stateInUse.filters[x.key]}
+             style={styles.filterLabel} />
       {x.name}
     </label>)}
     {/*                 <button class="hide-reissues">Hide RE</button>

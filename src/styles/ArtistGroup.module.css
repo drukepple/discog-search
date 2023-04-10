@@ -1,0 +1,26 @@
+.h2 {
+  cursor: pointer;
+  border-radius: 4px;
+  padding-left: 5px;
+  background-color: antiquewhite;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+.artistListings {
+  padding-left: 5px;
+}
+
+.collapsed .artistListings {
+  display: none;
+}

@@ -1,0 +1,58 @@
+
+.listing {
+  display: flex;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.img {
+  display: block;
+  width: 100px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.listingText {
+  width: 100%;
+}
+
+.h3 {
+  margin-top: 0;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    padding-left: 5px;
+
+    display: block;
+      font-size: 1.17em;
+      /* margin-block-start: 1em; */
+      /* margin-block-end: 1em; */
+      /* margin-inline-start: 0px; */
+      /* margin-inline-end: 0px; */
+      font-weight: bold;
+}
+
+.releaseDesc {
+  color: #999;
+}
+.reissue {
+  background-color: red;
+}
+
+.listingDetails {
+  padding-left: 5px;
+}
+
+.mediaCondition {
+
+}
+
+.links a {
+  color: rgb(83, 99, 236);
+  text-decoration: underline;
+}
+
+.collapsed .collapsable {
+  display: none;
+}

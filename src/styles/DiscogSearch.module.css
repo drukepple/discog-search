@@ -1,0 +1,7 @@
+.main {
+  width: 100%;
+  transition: width ease-out 0.5s;
+}
+.sidebarOpen {
+  width: 50%;
+}
