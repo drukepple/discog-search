@@ -2,7 +2,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import styles from '@/styles/DiscogSearch.module.css'
 import Filters from "./filters";
-import SearchForm, { useSearchState } from "./search-form";
+import SearchForm from "./search-form";
+import { useSearchState } from "../state/use-search-state";
 import Sidebar from "./sidebar";
 import ProgressOverlay from "./progress-overlay";
 import ArtistGroup from "./artist-group";

@@ -1,28 +1,11 @@
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent } from "react";
+import { useSearchState } from "../state/use-search-state";
 
 const styles = {
   form: {
     display: 'flex',
     alignItems: 'center',
-  }
-}
-
-export const useSearchState = () => {
-  const router = useRouter();
-  const seller = router.query.seller ?? '';
-  const [sellerSlug, setSellerSlug] = useState(seller);
-  const [noCache, setNoCache] = useState(false);
-
-  useEffect(() => {
-    if (router.query.seller !== '') {
-      setSellerSlug(router.query.seller as string);
-    }
-  }, [router.query.seller]);
-
-  return {
-    sellerSlug, setSellerSlug,
-    noCache, setNoCache,
   }
 }
 
