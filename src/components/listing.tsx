@@ -1,3 +1,4 @@
+import { MouseEventHandler } from "react";
 import Image from "next/image";
 import styles from '@/styles/Listing.module.css';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -26,13 +27,13 @@ export default function Listing({listing, artist}:ListingProps) {
   }
 
   const setSidebar = useSetRecoilState(sidebarAtom)
-  const openInSidebar = (e:MouseEvent<HTMLAnchorElement>) => {
-    console.log(e.metaKey, e.target.href, listing);
+  const openInSidebar: MouseEventHandler<HTMLAnchorElement> = (e) => {
+    console.log(e.metaKey, (e.target as HTMLAnchorElement).href, listing);
     if (!e.metaKey) {
       e.preventDefault();
       setSidebar({
         open: true,
-        src: e.target.href
+        src: (e.target as HTMLAnchorElement).href
       })
     }
   }
