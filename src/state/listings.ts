@@ -1,8 +1,10 @@
 import { SearchResults } from '@/pages/api/search';
-import {atom, selector, selectorFamily} from 'recoil';
+import {AtomEffect, atom, selectorFamily} from 'recoil';
 
-const localStorageEffect = (key:string) => ({setSelf, onSet}) => {
-  const savedValue = localStorage.getItem(key);
+
+const localStorageEffect = (key:string): AtomEffect<DisplayState> => ({setSelf, onSet}) => {
+  if (typeof window === 'undefined') { return; }
+  const savedValue = window.localStorage.getItem(key);
   if (savedValue !== null) {
     setSelf(JSON.parse(savedValue));
   }
@@ -87,7 +89,10 @@ export const displayStateAtom = atom<DisplayState>({
     artists: {},
     listings: {},
     filters: defaultFiltersDisplayState,
-  }
+  },
+  effects: [
+    localStorageEffect('sellerState')
+  ]
 })
 
 export const artistDisplayStateSelector = selectorFamily<ArtistDisplayState, string>({
