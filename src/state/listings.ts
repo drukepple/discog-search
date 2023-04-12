@@ -4,9 +4,8 @@ import {AtomEffect, atom, atomFamily, selectorFamily} from 'recoil';
 // Back the display state atom family with local storage.
 const localStorageEffect = (key:string): AtomEffect<DisplayState> => ({setSelf, onSet}) => {
   if (typeof window === 'undefined') { return; }
-  console.log('Local Storage Effect.......');
   const savedValue = window.localStorage.getItem(key);
-  console.log('savedValue', JSON.parse(savedValue || '{}'));
+  // console.log('savedValue', JSON.parse(savedValue || '{}'));
   if (savedValue !== null) {
     setSelf(JSON.parse(savedValue));
   }
@@ -124,7 +123,6 @@ export const artistDisplayStateSelector = selectorFamily<ArtistDisplayState, Dis
   },
   set: ({seller, artist}) => ({ set }, newState) => {
     if (artist === 'GLOBAL') return;
-    console.log('HELLO');
     set(displayStateAtom(seller), currState => ({
       ...currState,
       artists: {

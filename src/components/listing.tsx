@@ -21,7 +21,6 @@ export default function Listing({listing, artist}:ListingProps) {
   const globalDisaplyState = useRecoilValue(displayStateAtom('GLOBAL'));
 
   const handleTitleClick = () => {
-    console.log('click')
     setListingDisplayState({
       open: !listingDisplayState.open,
     });

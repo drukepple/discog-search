@@ -2,10 +2,6 @@ import { sidebarAtom } from '@/state/listings';
 import styles from '@/styles/Sidebar.module.css';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-// type SidebarProps = {
-//   open: boolean,
-//   src?: string,
-// }
 export default function Sidebar() {
   const {open, src} = useRecoilValue(sidebarAtom);
   const setSidebarState = useSetRecoilState(sidebarAtom);
