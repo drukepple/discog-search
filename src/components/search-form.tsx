@@ -9,10 +9,10 @@ const styles = {
   }
 }
 
-type SearchFormProps = {
-  onSearch: (slug: string, noCache: boolean) => void;
-}
-export default function SearchForm({onSearch}:SearchFormProps) {
+// type SearchFormProps = {
+//   onSearch: (slug: string, noCache: boolean) => void;
+// }
+export default function SearchForm() {
   const router = useRouter();
   const {sellerSlug, setSellerSlug, noCache, setNoCache} = useSearchState();
 
