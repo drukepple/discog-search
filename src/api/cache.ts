@@ -4,7 +4,7 @@ import path from 'path';
 const appDir = path.dirname(require.main?.filename ?? '');
 console.log('CACHE -----------------------------\nappDir:', appDir);
 
-const removeDir = function (path) {
+const removeDir = function (path: string) {
   if (fs.existsSync(path)) {
     const files = fs.readdirSync(path)
 
@@ -48,8 +48,8 @@ const mkdir_p = (fsPath:string) => {
  * @param {number} ttl TTL in MINUTES
  * @param {function} fetchData Function that returns a Promise that returns the data to cache, if the cache doesn't exist or has expired.
  */
-export default async function getCached(key, ttl, noCache, fetchData) {
-  const now = new Date()//.toISOString();
+export default async function getCached(key:string, ttl:number, noCache:boolean, fetchData:() => unknown) {
+  const now = new Date();
   const cacheDir = path.join(appDir, 'public', 'cache', key);
   // console.log('> cacheDir:', cacheDir);
   mkdir_p(cacheDir);
@@ -67,7 +67,7 @@ export default async function getCached(key, ttl, noCache, fetchData) {
     const ttlMs = ttl * 1000
     // console.log('ttlMs:', ttlMs)
     // console.log('now - cacheDate:', now - cacheDate)
-    if (now - cacheDate < ttlMs && !noCache) {
+    if (now.getTime() - cacheDate.getTime() < ttlMs && !noCache) {
       // console.log(key, 'cache good, returning data');
       const latestPath = path.join(cacheDir, latestFile);
       const cachedData = JSON.parse(fs.readFileSync(latestPath).toString());

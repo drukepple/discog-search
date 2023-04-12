@@ -1,5 +1,6 @@
 import http from 'http';
-import {server as wss} from 'websocket';
+import { ParsedUrlQuery } from 'querystring';
+import {connection, server as wss} from 'websocket';
 const WSS_PORT = 8008;
 
 const server = http.createServer();
@@ -10,7 +11,7 @@ const wsServer = new wss({
 });
 
 
-const clients = {};
+const clients:Record<string, connection> = {};
 // let connection;
 
 export const getUniqueId = () => {
@@ -20,7 +21,9 @@ export const getUniqueId = () => {
 
 wsServer.on('request', request => {
   // var userId = getUniqueId();
-  const userId = request.resourceURL.query.connectionId
+  const query = request?.resourceURL.query as ParsedUrlQuery || {};
+  console.log(request?.resourceURL.query);
+  const userId = query.connectionId as string;
   // console.log('request', Object.keys(request.httpRequest.url));//.socket.resource.search());
   // console.log('request', request.resourceURL.query);//.socket.resource.search());
   // console.log('request', request.resourceURL.query.connectionId);//.socket.resource.search());
@@ -41,7 +44,7 @@ wsServer.on('request', request => {
 });
 
 
-export function sendProgressUpdate(page, totalPages, connectionId) {
+export function sendProgressUpdate(page: number, totalPages: number, connectionId: string) {
   const connection = clients[connectionId];
   console.log('send prog update on', connectionId)
   if (!connection) { return; console.log('No socket connection');}
