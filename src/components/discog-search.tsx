@@ -9,8 +9,8 @@ import ProgressOverlay from "./progress-overlay";
 import ArtistGroup from "./artist-group";
 import search from "@/services/search";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { ArtistDisplayState, DisplayState, ListingDisplayState, displayStateAtom, listingsAtom, sidebarAtom } from "@/state/listings";
-import { defaultFiltersDisplayState, defaultArtistDisplayState } from '@/state/listings';
+import { listingsAtom, sidebarAtom } from "@/state/listings";
+import { ArtistDisplayState, DisplayState, ListingDisplayState, displayStateAtom, defaultFiltersDisplayState, defaultArtistDisplayState } from '@/state/display-state';
 import { useEffect } from "react";
 import Head from "next/head";
 

@@ -2,7 +2,8 @@ import { MouseEventHandler } from "react";
 import Image from "next/image";
 import styles from '@/styles/Listing.module.css';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { ListingDisplayStateSelector, artistDisplayStateSelector, displayStateAtom, sidebarAtom } from "@/state/listings";
+import { sidebarAtom } from "@/state/listings";
+import { ListingDisplayStateSelector, artistDisplayStateSelector, displayStateAtom } from "@/state/display-state";
 import { filterNameToKeyMap } from "./filters";
 import { useSearchState } from "@/state/use-search-state";
 

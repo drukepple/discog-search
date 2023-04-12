@@ -1,9 +1,10 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import Filters from "./filters";
 import Listing from "./listing";
-import { artistDisplayStateSelector, listingsAtom } from "@/state/listings";
+import { listingsAtom } from "@/state/listings";
+import { artistDisplayStateSelector } from '@/state/display-state';
 import styles from '@/styles/ArtistGroup.module.css';
-import { MouseEvent, useState } from "react";
+import { MouseEvent } from "react";
 import { useSearchState } from "@/state/use-search-state";
 
 export default function ArtistGroup({artist}:{artist:string}) {

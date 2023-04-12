@@ -1,6 +1,6 @@
-import { artistDisplayStateSelector, displayStateAtom, FilterState, FiltersState, FilterKeys } from "@/state/listings";
+import { artistDisplayStateSelector, displayStateAtom, FilterState, FilterKeys } from "@/state/display-state";
 import { useSearchState } from "@/state/use-search-state";
-import { ChangeEvent, MouseEvent, useState } from "react"
+import { ChangeEvent } from "react"
 import { useRecoilState } from "recoil";
 
 
