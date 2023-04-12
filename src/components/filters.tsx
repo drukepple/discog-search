@@ -1,4 +1,5 @@
 import { artistDisplayStateSelector, displayStateAtom, FilterState, FiltersState, FilterKeys } from "@/state/listings";
+import { useSearchState } from "@/state/use-search-state";
 import { ChangeEvent, MouseEvent, useState } from "react"
 import { useRecoilState } from "recoil";
 
@@ -33,8 +34,9 @@ type FiltersProps = {
 }
 export default function Filters({artist='GLOBAL'}:FiltersProps) {
 
-  const [displayState, setDisplayState] = useRecoilState(displayStateAtom);
-  const [artistDisplay, setArtistDisplay] = useRecoilState(artistDisplayStateSelector(artist))
+  const {sellerSlug:seller} = useSearchState();
+  const [displayState, setDisplayState] = useRecoilState(displayStateAtom(seller));
+  const [artistDisplay, setArtistDisplay] = useRecoilState(artistDisplayStateSelector({seller, artist}))
   const stateInUse = artist === 'GLOBAL' ? displayState : artistDisplay;
   // const [filterState, setFilterState] = useState<FiltersState>({
   //   mint: true,

@@ -4,6 +4,7 @@ import Listing from "./listing";
 import { artistDisplayStateSelector, listingsAtom } from "@/state/listings";
 import styles from '@/styles/ArtistGroup.module.css';
 import { MouseEvent, useState } from "react";
+import { useSearchState } from "@/state/use-search-state";
 
 // const conditionsMap:Record<string, ConditionFilterKeys> = {
 //   'Mint (M)': 'mint',
@@ -18,7 +19,8 @@ import { MouseEvent, useState } from "react";
 export default function ArtistGroup({artist}:{artist:string}) {
 
   const artistListings = useRecoilValue(listingsAtom);
-  const [artistDisplay, setArtistDisplay] = useRecoilState(artistDisplayStateSelector(artist));
+  const {sellerSlug:seller} = useSearchState();
+  const [artistDisplay, setArtistDisplay] = useRecoilState(artistDisplayStateSelector({seller, artist}));
 
   // const [visibleListings, setVisibleListings] = useState(
   //   artistListings.artists[artist].map(x => true)

@@ -1,10 +1,12 @@
 import { SearchResults } from '@/pages/api/search';
-import {AtomEffect, atom, selectorFamily} from 'recoil';
+import {AtomEffect, atom, atomFamily, selectorFamily} from 'recoil';
 
-
+// Back the display state atom family with local storage.
 const localStorageEffect = (key:string): AtomEffect<DisplayState> => ({setSelf, onSet}) => {
   if (typeof window === 'undefined') { return; }
+  console.log('Local Storage Effect.......');
   const savedValue = window.localStorage.getItem(key);
+  console.log('savedValue', JSON.parse(savedValue || '{}'));
   if (savedValue !== null) {
     setSelf(JSON.parse(savedValue));
   }
@@ -17,6 +19,7 @@ const localStorageEffect = (key:string): AtomEffect<DisplayState> => ({setSelf, 
   });
 }
 
+// The search results from the current search.
 export const listingsAtom = atom<SearchResults>({
   key: 'listings',
   default: {
@@ -29,6 +32,7 @@ export const listingsAtom = atom<SearchResults>({
   }
 })
 
+// DISPLAY STATE TYPES ---------------------------------------------
 export type DisplayState = {
   artists: Record<string, ArtistDisplayState>;
   listings: Record<string, ListingDisplayState>;
@@ -44,6 +48,7 @@ export type ListingDisplayState = {
   open: boolean;
 }
 
+// FILTER TYPES
 export type ConditionFilterKeys = 'mint'
  | 'nearMint'
  | 'veryGoodPlus'
@@ -62,6 +67,7 @@ export type FilterState = {
 }
 export type FiltersState = Record<FilterKeys, boolean>;
 
+// DEFAULTS ---------------------------------------------------------
 export const defaultFiltersDisplayState = {
   mint: true,
   nearMint: true,
@@ -75,35 +81,51 @@ export const defaultFiltersDisplayState = {
   single: false,
   all: true,
 }
-export const defaultArtistDisplayState = {
+export const defaultArtistDisplayState: ArtistDisplayState = {
   filters: defaultFiltersDisplayState,
+  open: true,
+}
+export const defaultListingDisaplyState: ListingDisplayState = {
   open: true,
 }
 
 
+// ATOMS/SELECTORS ---------------------------------------------------
 
-
-export const displayStateAtom = atom<DisplayState>({
+// Get a display state for a given seller slug
+export const displayStateAtom = atomFamily<DisplayState, string>({
   key: 'displayState',
   default: {
     artists: {},
     listings: {},
     filters: defaultFiltersDisplayState,
   },
-  effects: [
-    localStorageEffect('sellerState')
-  ]
+  effects: seller => ([
+    localStorageEffect('displayState-' + seller)
+  ])
 })
 
-export const artistDisplayStateSelector = selectorFamily<ArtistDisplayState, string>({
+type DisplaySelectorArtistId = {
+  seller: string,
+  artist: string,
+}
+type DisplaySelectorId = {
+  seller: string,
+  id: number,
+}
+
+// Artist display states get just the `artists[artist]` part of
+// a given `seller` display state atom.
+export const artistDisplayStateSelector = selectorFamily<ArtistDisplayState, DisplaySelectorArtistId>({
   key: 'artistDisplayState',
-  get: (artist:string) => ({get}) => {
+  get: ({seller, artist}) => ({get}) => {
     if (artist === 'GLOBAL') return defaultArtistDisplayState;
-    return get(displayStateAtom).artists[artist];
+    return get(displayStateAtom(seller))?.artists?.[artist] || defaultArtistDisplayState;
   },
-  set: (artist: string) => ({ set }, newState) => {
+  set: ({seller, artist}) => ({ set }, newState) => {
     if (artist === 'GLOBAL') return;
-    set(displayStateAtom, currState => ({
+    console.log('HELLO');
+    set(displayStateAtom(seller), currState => ({
       ...currState,
       artists: {
         ...currState.artists,
@@ -113,13 +135,15 @@ export const artistDisplayStateSelector = selectorFamily<ArtistDisplayState, str
   },
 });
 
-export const ListingDisplayStateSelector = selectorFamily<ListingDisplayState, number>({
+// ListingDisplay states get just a single listing by id from `listings`
+// of a given `seller` display atom.
+export const ListingDisplayStateSelector = selectorFamily<ListingDisplayState, DisplaySelectorId>({
   key: 'listingDisaplyState',
-  get: (id: number) => ({get}) => {
-    return get(displayStateAtom).listings[id];
+  get: ({seller, id}) => ({get}) => {
+    return get(displayStateAtom(seller))?.listings?.[id] ?? defaultListingDisaplyState;
   },
-  set: (id: number) => ({set}, newState) => {
-    set(displayStateAtom, currState => ({
+  set: ({seller, id}) => ({set}, newState) => {
+    set(displayStateAtom(seller), currState => ({
       ...currState,
       listings: {
         ...currState.listings,
@@ -129,10 +153,6 @@ export const ListingDisplayStateSelector = selectorFamily<ListingDisplayState, n
   }
 });
 
-// export const FilterDisplayStateSelector = atom({
-//   key: 'globalFilterDisplayState',
-//   default:
-// })
 
 
 export const sidebarAtom = atom({

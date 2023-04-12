@@ -21,10 +21,10 @@ const defaultListingState: ListingDisplayState = {
 export default function DiscogSearch() {
 
   const [listings, setListings] = useRecoilState(listingsAtom);
-  const [displayState, setDisplayState] = useRecoilState(displayStateAtom);
   const sidebarState = useRecoilValue(sidebarAtom);
   const router = useRouter();
   const {sellerSlug} = useSearchState();
+  const [displayState, setDisplayState] = useRecoilState(displayStateAtom(sellerSlug as string));
 
   useEffect(() => {
     const sellerSlug = router.query.seller as string;
@@ -36,9 +36,10 @@ export default function DiscogSearch() {
         // Create a new display state for this seller.
         // For each item, if it already exists in the atom (which is backed
         // by local storage), use that; if it's new, then use the default.
-        const newDisplayState: DisplayState = {
+        const storedSellerDisplayState = displayState || {};
+        const newSellerDisplayState: DisplayState = {
           artists: Object.keys(results.artists).reduce((acc:Record<string, ArtistDisplayState>, artist) => {
-            acc[artist] = displayState.artists[artist] || defaultArtistDisplayState;
+            acc[artist] = storedSellerDisplayState.artists?.[artist] || defaultArtistDisplayState;
             flatListings = flatListings.concat(results.artists[artist]);
             return acc;
           }, {}),
@@ -48,7 +49,10 @@ export default function DiscogSearch() {
           }, {}),
           filters: defaultFiltersDisplayState,
         }
-        setDisplayState(newDisplayState);
+        setDisplayState({
+          ...displayState,
+          [sellerSlug]: newSellerDisplayState,
+        });
       })
     }
   }, [router.query]);
@@ -61,6 +65,7 @@ export default function DiscogSearch() {
       </Head>
     <SearchForm />
     <div id="container">
+      RoyalRecordsSeattle<br/>WEBUYRECORDSUSA<br/>{router.query.sellerSlug}<br/>{router.query.noCache}
       <div>Seller: {sellerSlug}</div>
       <div id="results" style={{position: 'relative'}}>
         <h1>Results</h1>

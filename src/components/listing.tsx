@@ -4,7 +4,7 @@ import styles from '@/styles/Listing.module.css';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { ListingDisplayStateSelector, artistDisplayStateSelector, displayStateAtom, sidebarAtom } from "@/state/listings";
 import { filterNameToKeyMap } from "./filters";
-import { MouseEvent } from "react";
+import { useSearchState } from "@/state/use-search-state";
 
 type ListingProps = {
   listing: Listing,
@@ -14,10 +14,11 @@ export default function Listing({listing, artist}:ListingProps) {
 
   const rel = listing.release;
   const prices:{price:string, shipping:string, total:string} = (listing as any).usdPrices
+  const {sellerSlug:seller} = useSearchState();
 
-  const [listingDisplayState, setListingDisplayState] = useRecoilState(ListingDisplayStateSelector(listing.id))
-  const artistDisplayState = useRecoilValue(artistDisplayStateSelector(artist));
-  const globalDisaplyState = useRecoilValue(displayStateAtom);
+  const [listingDisplayState, setListingDisplayState] = useRecoilState(ListingDisplayStateSelector({seller, id:listing.id}))
+  const artistDisplayState = useRecoilValue(artistDisplayStateSelector({seller, artist}));
+  const globalDisaplyState = useRecoilValue(displayStateAtom('GLOBAL'));
 
   const handleTitleClick = () => {
     console.log('click')
