@@ -25,6 +25,7 @@ module.exports = [
   'Prince',
   'Prince & The NPG',
   'Prince & The Revolution',
+  'The Artist (Formerly Known As Prince)',
   'Queen',
   'The Police',
   'The Rolling Stones',

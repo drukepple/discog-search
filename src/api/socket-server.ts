@@ -46,7 +46,7 @@ wsServer.on('request', request => {
 
 export function sendProgressUpdate(page: number, totalPages: number, connectionId: string) {
   const connection = clients[connectionId];
-  console.log('send prog update on', connectionId)
+  // console.log('send prog update on', connectionId)
   if (!connection) { return; console.log('No socket connection');}
   console.log("Found connection", connectionId, connection);
   connection.sendUTF(JSON.stringify({

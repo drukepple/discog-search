@@ -24,7 +24,8 @@ export default async function handler(
   console.log('=============================')
   console.log(req.query);
   const url = new URL(req.url as string, 'https://www.foo.com');
-  console.log(url.search);
+  // console.log(req.destroyed);
+  // console.log(req.);
   const market = new DiscogsMarketplace();
   req.on('close', () => market.cancel());
   console.log('=============================')
