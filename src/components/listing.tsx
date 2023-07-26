@@ -44,6 +44,9 @@ export default function Listing({listing, artist}:ListingProps) {
     const conditionKey = filterNameToKeyMap[listing.condition];
     // console.log(conditionKey, artistDisplayState.filters[conditionKey]);
     const artistFilter = artistDisplayState.filters[conditionKey];
+    if (listingDisplayState.open === true) {
+      return true;
+    }
     if (artistFilter === false) {
       return false;
     }
