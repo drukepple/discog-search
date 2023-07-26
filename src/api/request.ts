@@ -2,14 +2,7 @@ import  https from 'https';
 import url from 'url';
 
 export default function getRequest(requestUrl:string) {
-  // console.log('Requesting:', requestUrl);
   return new Promise((resolve, reject) => {
-
-    // var options = {
-    //   host: url,
-    //   port: 80,
-    //   path: "/"
-    // };
 
     var content = "";
 
@@ -44,7 +37,6 @@ export default function getRequest(requestUrl:string) {
         });
 
         res.on("end", function () {
-          // console.log("did it")
           resolve(content);
         });
       }
