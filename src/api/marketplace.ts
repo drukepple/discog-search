@@ -4,7 +4,7 @@ const util = require('disconnect/lib/util');
 import money from 'money';
 import client from './client';
 import request from './request';
-import getCached from './cache';
+import getCached, { CachedData } from './cache';
 import fs from 'fs';
 import path from 'path';
 import {sendProgressUpdate} from './socket-server';
@@ -12,30 +12,13 @@ import {sendProgressUpdate} from './socket-server';
 const appDir = path.dirname(require.main?.filename || '');
 console.log('--------------------------\nappDir:', appDir);
 
-type ListingAddOn = {
-  usdPrices: {
-    price: string | number;
-    shipping: string | number;
-    total: string | number;
-  }
-}
-export type SearchResults = {
-  results: Listing[] | (Listing & ListingAddOn)[],
-  unfinished: boolean;
-  totalPages: number;
-}
-export type FilterResults = {
-  unfinished: boolean;
-  totalPages: number;
-  artists: Record<string, Listing[]>;
-  originalCurrency: string; // Currency
-}
+
 
 async function init() {
-  const rates = await getCached('_exchange-rates.json', 24*60*60*1000, false, async () => {
+  const {data:rates} = await getCached<any>('_exchange-rates.json', 24*60*60*1000, false, async () => {
     const OXR_KEY = '402f86a53c044dd5a35bae913b06bb23';
     const ratesResult = await (request(`https://openexchangerates.org/api/latest.json?app_id=${OXR_KEY}`))
-    const rates = JSON.parse(ratesResult);
+    const rates = JSON.parse(ratesResult as string);
     return rates;
   })
   money.base = rates.base;
@@ -97,7 +80,7 @@ class DiscogsMarketplace {
   async getAllListings(seller: string, noCache=false):Promise<SearchResults> {
     const oneDayInMinutes = 24 * 60 * 60;
     // TODO: make getCached typed/generic
-    const cached = await getCached(`${seller}/catalog-full`, oneDayInMinutes, noCache, () => {
+    const {data: cached} = await getCached<SearchResults>(`${seller}/catalog-full`, oneDayInMinutes, noCache, () => {
       let allResults: Listing[] = []
       function getOnePage(page: number) {
         const obj = {
@@ -109,7 +92,8 @@ class DiscogsMarketplace {
         })
       }
       return new Promise((resolve, reject) => {
-        const getOnePageThen = (r:InventorySearch):Promise<SearchResults> => {
+        const getOnePageThen = (cd:CachedData<InventorySearch>):Promise<SearchResults> => {
+          const r = cd.data;
           console.log('------------------ then...', r.listings.length)
           allResults = allResults.concat(r.listings);
           const pages = r.pagination
