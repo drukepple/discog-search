@@ -1,8 +1,8 @@
-const https = require('https');
-const url = require('url');
+import  https from 'https';
+import url from 'url';
 
-function getRequest(requestUrl) {
-  console.log('Requesting:', requestUrl);
+export default function getRequest(requestUrl:string) {
+  // console.log('Requesting:', requestUrl);
   return new Promise((resolve, reject) => {
 
     // var options = {
@@ -15,7 +15,10 @@ function getRequest(requestUrl) {
 
     var req = https.request(requestUrl, function (res) {
       res.setEncoding("utf8");
-
+      if (!res.statusCode) {
+        console.error('this response does not have a status code', requestUrl, res);
+        throw new Error('No STATUS CODE!')
+      }
       if (res.statusCode > 300 && res.statusCode < 400 && res.headers.location) {
         // The location for some (most) redirects will only contain the path,  not the hostname;
         // detect this and add the host to the path.
@@ -23,7 +26,7 @@ function getRequest(requestUrl) {
         // The hostname is not included, parse it from the original URL and attach it.
         if (!url.parse(redirectUrl).hostname) {
           // Hostname included; make request to res.headers.location
-          redirectUrl = url.parse(url).hostname + redirectUrl;
+          redirectUrl = url.parse(requestUrl).hostname + redirectUrl;
           console.log("Composing redirect URL:", redirectUrl);
         }
         console.log('Redirect to:', redirectUrl);
@@ -54,5 +57,3 @@ function getRequest(requestUrl) {
     req.end();
   })
 }
-
-module.exports = getRequest;
