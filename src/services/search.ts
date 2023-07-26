@@ -1,6 +1,11 @@
 import { SearchResults } from "@/pages/api/search";
 
-export default function search(slug: string, noCache: boolean):Promise<SearchResults> {
+export type SearchRequest = {
+  fetch: Promise<SearchResults>,
+  abort: () => void,
+}
+
+export default function search(slug: string, noCache: boolean):SearchRequest {
   const params = new URLSearchParams();
   params.append('seller', slug);
   params.append('no_cache', noCache.toString());
