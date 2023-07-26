@@ -22,11 +22,22 @@ const styles = {
 }
 
 export const filterNameToKeyMap: Record<string, FilterKeys> = {
-  'Mint (M)': 'mint',
-  'Near Mint (NM or M-)': 'nearMint',
-  'Very Good Plus (VG+)': 'veryGoodPlus',
-  'Very Good (VG)': 'veryGood',
-}
+  "Mint (M)": "mint",
+  "Near Mint (NM or M-)": "nearMint",
+  "Very Good Plus (VG+)": "veryGoodPlus",
+  "Very Good (VG)": "veryGood",
+  "Good Plus (G+)": "goodPlus",
+  "Good (G)": "good",
+  "Fair (F)": "fair",
+  "M": "mint",
+  "M-": "nearMint",
+  "NM": "nearMint",
+  "VG+": "veryGoodPlus",
+  "VG": "veryGood",
+  "G+": "goodPlus",
+  "G": "good",
+  "F": "fair",
+};
 
 type FiltersProps = {
   // onChange: (filters: FiltersState) => void;
@@ -38,6 +49,8 @@ export default function Filters({artist='GLOBAL'}:FiltersProps) {
   const [displayState, setDisplayState] = useRecoilState(displayStateAtom(seller));
   const [artistDisplay, setArtistDisplay] = useRecoilState(artistDisplayStateSelector({seller, artist}))
   const stateInUse = artist === 'GLOBAL' ? displayState : artistDisplay;
+  const setStateInUse =
+    artist === "GLOBAL" ? setDisplayState : setArtistDisplay;
   // const [filterState, setFilterState] = useState<FiltersState>({
   //   mint: true,
   //   nearMint: true,
@@ -69,7 +82,7 @@ export default function Filters({artist='GLOBAL'}:FiltersProps) {
   const handleClick = (event:ChangeEvent<HTMLInputElement>, key:string, filter: boolean) => {
     console.log(key, filter);
     if (artist === 'GLOBAL') {
-      console.log('GLOBAL')
+      console.log("GLOBAL >>", displayState);
       const state = {
         ...displayState,
         filters: {
@@ -94,27 +107,34 @@ export default function Filters({artist='GLOBAL'}:FiltersProps) {
     // event.preventDefault();
   }
 
-  return <div id="control-bar" style={styles.filterRow}>
-    {/* <pre>{JSON.stringify(stateInUse.filters, null, 4)}</pre> */}
-    {nameToKeyMap.map(x => <label key={x.key} style={styles.filterItem}>
-      <input type="checkbox"
-             onChange={(e) => handleClick(e, x.key, e.target.checked)}
-             checked={stateInUse.filters[x.key]}
-             style={styles.filterLabel} />
-      {x.name}
-    </label>)}
-    {/*                 <button class="hide-reissues">Hide RE</button>
+  return (
+    <div id="control-bar" style={styles.filterRow}>
+      {/* {artist === "GLOBAL" && <pre>{JSON.stringify(stateInUse.filters, null, 4)}</pre>} */}
+      {/* <pre>{JSON.stringify(stateInUse.filters, null, 4)}</pre> */}
+      {nameToKeyMap.map((x) => (
+        <label key={x.key} style={styles.filterItem}>
+          <input
+            type="checkbox"
+            onChange={(e) => handleClick(e, x.key, e.target.checked)}
+            checked={stateInUse.filters[x.key]}
+            style={styles.filterLabel}
+          />
+          {x.name}
+        </label>
+      ))}
+      {/*                 <button class="hide-reissues">Hide RE</button>
                 <button class="hide-club">Hide Club</button>
                 <button class="collapse-all">Collapse All</button>
                 <button class="expand-all">Expand All</button>
  */}
-    {/* <label><input type="checkbox" class="media-condition" data-rank="M,Mint (M)" checked="" />Mint</label>
+      {/* <label><input type="checkbox" class="media-condition" data-rank="M,Mint (M)" checked="" />Mint</label>
     <label><input type="checkbox" class="media-condition" data-rank="NM or M-,Near Mint (NM or M-)" checked="" />NM</label>
     <label><input type="checkbox" class="media-condition" data-rank="VG+,Very Good Plus (VG+)" checked="" />VG+</label>
     <label><input type="checkbox" class="media-condition" data-rank="VG" checked="" />VG</label>
     <label><input type="checkbox" class="media-condition" data-rank="G+" checked="" />G+</label>
     <label><input type="checkbox" class="media-condition" data-rank="G" checked="" />G</label>
     <label><input type="checkbox" class="media-condition" data-rank="F" checked="" />F</label> */}
-  </div>
+    </div>
+  );
 
 }
