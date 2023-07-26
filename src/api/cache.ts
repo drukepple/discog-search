@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 
 const appDir = path.dirname(require.main?.filename ?? '');
-console.log('CACHE -----------------------------\nappDir:', appDir);
 
 const removeDir = function (path: string) {
   if (fs.existsSync(path)) {
@@ -25,16 +24,13 @@ const removeDir = function (path: string) {
   }
 }
 const mkdir_p = (fsPath:string) => {
-  // console.log('*****', fsPath)
   const dirs = fsPath.split(path.sep);
   const check: string[] = [];
   dirs.forEach(dir => {
     check.push(dir);
     const checkpath = check.join(path.sep);
     if (dir !== '.' && dir !== '..' && dir !== '') {
-      // console.log('> checkpath:', checkpath)
       if (!fs.existsSync(checkpath)) {
-        // console.log('> doesn’t exist, making')
         fs.mkdirSync(checkpath);
       }
     }
@@ -58,51 +54,33 @@ export type CachedData<T=any> = {
 export default async function getCached<T=any>(key:string, ttl:number, noCache:boolean, fetchData:() => unknown):Promise<CachedData<T>> {
   const now = new Date();
   const cacheDir = getCacheDir(key);
-  // console.log('> cacheDir:', cacheDir);
   mkdir_p(cacheDir);
-  // if (!fs.existsSync(cacheDir)) {
-  //   fs.mkdirSync(cacheDir);
-  // }
   const filelist = fs.readdirSync(cacheDir).sort();
-  // console.log(key, 'cache dir filelist:', filelist);
 
   if (filelist.length > 0) {
-    // console.log('At least one file');
     const latestFile = filelist[filelist.length-1];
-    // console.log(latestFile);
     const cacheDate = new Date(latestFile.replace('.json', ''));
     const ttlMs = ttl * 1000
-    // console.log('ttlMs:', ttlMs)
-    // console.log('now - cacheDate:', now - cacheDate)
     if (now.getTime() - cacheDate.getTime() < ttlMs && !noCache) {
-      // console.log(key, 'cache good, returning data');
       const latestPath = path.join(cacheDir, latestFile);
       const cachedData = JSON.parse(fs.readFileSync(latestPath).toString());
       return Promise.resolve({data: cachedData, fromCache: true});
     } else {
-      // console.log(key, 'cache expired');
-      // console.log('Do some cleanup in this dir...');
       filelist.forEach(filename => {
         const filepath = path.join(cacheDir, filename);
-        // console.log('  > ', cacheDir, filename)
         if (fs.lstatSync(filepath).isDirectory()) {
-          // console.log('    - remove dir', filepath);
           removeDir(filepath);
         } else {
-          // console.log('    + removing file', filepath)
           fs.rmSync(filepath);
         }
       })
     }
   } else {
-    // console.log('Cache does not exist');
   }
 
   const dataToSave = await fetchData();
   mkdir_p(cacheDir);
   const filename = path.join(cacheDir, now.toISOString() + '.json');
-  // console.log(filename);
-  // console.log(dataToSave)
   fs.writeFileSync(filename, JSON.stringify(dataToSave, null, 4));
   return Promise.resolve({data: dataToSave as string, fromCache: false});
 }
