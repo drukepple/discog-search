@@ -25,7 +25,7 @@ const removeDir = function (path: string) {
   }
 }
 const mkdir_p = (fsPath:string) => {
-  console.log('*****', fsPath)
+  // console.log('*****', fsPath)
   const dirs = fsPath.split(path.sep);
   const check: string[] = [];
   dirs.forEach(dir => {
@@ -34,23 +34,30 @@ const mkdir_p = (fsPath:string) => {
     if (dir !== '.' && dir !== '..' && dir !== '') {
       // console.log('> checkpath:', checkpath)
       if (!fs.existsSync(checkpath)) {
-        console.log('> doesn’t exist, making')
+        // console.log('> doesn’t exist, making')
         fs.mkdirSync(checkpath);
       }
     }
   })
 }
 
+const getCacheDir = (key:string) => {
+  return path.join(appDir, 'public', 'cache', key);
+}
 
+export type CachedData<T=any> = {
+  data: T;
+  fromCache: boolean;
+}
 /**
  *
  * @param {string} key unique key
  * @param {number} ttl TTL in MINUTES
  * @param {function} fetchData Function that returns a Promise that returns the data to cache, if the cache doesn't exist or has expired.
  */
-export default async function getCached(key:string, ttl:number, noCache:boolean, fetchData:() => unknown) {
+export default async function getCached<T=any>(key:string, ttl:number, noCache:boolean, fetchData:() => unknown):Promise<CachedData<T>> {
   const now = new Date();
-  const cacheDir = path.join(appDir, 'public', 'cache', key);
+  const cacheDir = getCacheDir(key);
   // console.log('> cacheDir:', cacheDir);
   mkdir_p(cacheDir);
   // if (!fs.existsSync(cacheDir)) {
@@ -71,10 +78,10 @@ export default async function getCached(key:string, ttl:number, noCache:boolean,
       // console.log(key, 'cache good, returning data');
       const latestPath = path.join(cacheDir, latestFile);
       const cachedData = JSON.parse(fs.readFileSync(latestPath).toString());
-      return Promise.resolve(cachedData);
+      return Promise.resolve({data: cachedData, fromCache: true});
     } else {
       // console.log(key, 'cache expired');
-      console.log('Do some cleanup in this dir...');
+      // console.log('Do some cleanup in this dir...');
       filelist.forEach(filename => {
         const filepath = path.join(cacheDir, filename);
         // console.log('  > ', cacheDir, filename)
@@ -97,5 +104,9 @@ export default async function getCached(key:string, ttl:number, noCache:boolean,
   // console.log(filename);
   // console.log(dataToSave)
   fs.writeFileSync(filename, JSON.stringify(dataToSave, null, 4));
-  return Promise.resolve(dataToSave);
+  return Promise.resolve({data: dataToSave as string, fromCache: false});
+}
+
+export async function clearCacheKey(key:string) {
+  removeDir(getCacheDir(key));
 }
