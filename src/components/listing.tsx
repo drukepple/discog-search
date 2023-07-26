@@ -62,7 +62,7 @@ export default function Listing({listing, artist}:ListingProps) {
       {/* <pre>{JSON.stringify(visible, null, 4)}</pre> */}
       {/* <pre>{JSON.stringify(rel, null, 4)}</pre> */}
       {/* <pre>{JSON.stringify(listing, null, 4)}</pre> */}
-      <img className={styles.img} width="100" height="auto" src={rel.images[0]?.uri150} alt="" />
+      <img className={styles.img} width="100" height="auto" src={rel.thumbnail} alt="" />
       {/* <Image alt="" width={100} height={100} src={rel.images[0].uri150} /> */}
     </div>
     <div className={styles.listingText}>
