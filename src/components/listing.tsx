@@ -19,7 +19,7 @@ export default function Listing({listing, artist}:ListingProps) {
 
   const [listingDisplayState, setListingDisplayState] = useRecoilState(ListingDisplayStateSelector({seller, id:listing.id}))
   const artistDisplayState = useRecoilValue(artistDisplayStateSelector({seller, artist}));
-  const globalDisaplyState = useRecoilValue(displayStateAtom('GLOBAL'));
+  const globalDisplayState = useRecoilValue(displayStateAtom(seller));
 
   const handleTitleClick = () => {
     setListingDisplayState({
@@ -47,7 +47,7 @@ export default function Listing({listing, artist}:ListingProps) {
     if (artistFilter === false) {
       return false;
     }
-    const globalFilter = globalDisaplyState.filters[conditionKey];
+    const globalFilter = globalDisplayState.filters[conditionKey];
     if (globalFilter === false) {
       return false;
     }
