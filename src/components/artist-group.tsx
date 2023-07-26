@@ -20,6 +20,7 @@ export default function ArtistGroup({artist}:{artist:string}) {
       open: !artistDisplay.open,
     })
   }
+  // console.log(artist, artistListings.artists[artist]);
 
   return <section className={styles.artistListings + (artistDisplay.open ? '' : ' ' + styles.collapsed)}>
     <h2 className={styles.h2} onClick={onHeaderClick}>{artist}
@@ -30,9 +31,9 @@ export default function ArtistGroup({artist}:{artist:string}) {
     {/* <pre>atrist: {JSON.stringify(artistDisplay, null, 4)}</pre> */}
     <div className={styles.artistListings}>
       {artistListings.artists[artist].map((l, i) => {
-        if (artistListings.artists[artist].findIndex(l2 => l2.id === l.id) === i) {
+        // if (artistListings.artists[artist].findIndex(l2 => l2.id === l.id) === i) {
           return <Listing key={l.id} listing={l} artist={artist} />
-        }
+        // }
       })}
     </div>
   </section>

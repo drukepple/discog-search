@@ -1,3 +1,4 @@
+import React from "react";
 import { MouseEventHandler } from "react";
 import Image from "next/image";
 import styles from '@/styles/Listing.module.css';
@@ -19,7 +20,7 @@ export default function Listing({listing, artist}:ListingProps) {
 
   const [listingDisplayState, setListingDisplayState] = useRecoilState(ListingDisplayStateSelector({seller, id:listing.id}))
   const artistDisplayState = useRecoilValue(artistDisplayStateSelector({seller, artist}));
-  const globalDisaplyState = useRecoilValue(displayStateAtom('GLOBAL'));
+  const globalDisplayState = useRecoilValue(displayStateAtom(seller));
 
   const handleTitleClick = () => {
     setListingDisplayState({
@@ -44,10 +45,13 @@ export default function Listing({listing, artist}:ListingProps) {
     const conditionKey = filterNameToKeyMap[listing.condition];
     // console.log(conditionKey, artistDisplayState.filters[conditionKey]);
     const artistFilter = artistDisplayState.filters[conditionKey];
+    if (listingDisplayState.open === true) {
+      return true;
+    }
     if (artistFilter === false) {
       return false;
     }
-    const globalFilter = globalDisaplyState.filters[conditionKey];
+    const globalFilter = globalDisplayState.filters[conditionKey];
     if (globalFilter === false) {
       return false;
     }
@@ -62,7 +66,7 @@ export default function Listing({listing, artist}:ListingProps) {
       {/* <pre>{JSON.stringify(visible, null, 4)}</pre> */}
       {/* <pre>{JSON.stringify(rel, null, 4)}</pre> */}
       {/* <pre>{JSON.stringify(listing, null, 4)}</pre> */}
-      <img className={styles.img} width="100" height="auto" src={rel.images[0]?.uri150} alt="" />
+      <img className={styles.img} width="100" height="auto" src={rel.thumbnail} alt="" />
       {/* <Image alt="" width={100} height={100} src={rel.images[0].uri150} /> */}
     </div>
     <div className={styles.listingText}>
