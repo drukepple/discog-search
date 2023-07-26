@@ -27,26 +27,7 @@ export default async function handler(
   // console.log(req.destroyed);
   // console.log(req.);
   const market = new DiscogsMarketplace();
-  req.on('end', () => {
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    console.log('END')
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!s')
-    market.cancel()
-  });
-  req.on('data', () => {
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    console.log('DATA')
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!s')
-  });
-  req.on('error', () => {
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    console.log('ERROR')
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!s')
-    market.cancel()
-  });
+  req.on('close', () => market.cancel());
   console.log('=============================')
 
   const q = req.query;
