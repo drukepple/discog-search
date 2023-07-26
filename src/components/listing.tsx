@@ -40,17 +40,21 @@ export default function Listing({listing, artist}:ListingProps) {
   }
 
   const getConditionFilterFromListing = () => {
-    // console.log('  >>  ', listing.condition);
+    // console.group(`Conditions - ${listing.condition} ${artist}`);
     const conditionKey = filterNameToKeyMap[listing.condition];
-    // console.log(conditionKey, artistDisplayState.filters[conditionKey]);
+    // console.log('conditionKey:', conditionKey);
     const artistFilter = artistDisplayState.filters[conditionKey];
     if (artistFilter === false) {
+      // console.groupEnd();
       return false;
     }
     const globalFilter = globalDisaplyState.filters[conditionKey];
     if (globalFilter === false) {
+      // console.groupEnd();
       return false;
     }
+    // console.log('globalfilter must be true')
+    // console.groupEnd();
     return true;
   }
 
@@ -59,7 +63,7 @@ export default function Listing({listing, artist}:ListingProps) {
        + (getConditionFilterFromListing() ? '' : ' ' + styles.collapsed)
     }>
     <div className={styles.collapsable}>
-      {/* <pre>{JSON.stringify(visible, null, 4)}</pre> */}
+      {/* <pre>{JSON.stringify(globalDisplayState.filters, null, 4)}</pre> */}
       {/* <pre>{JSON.stringify(rel, null, 4)}</pre> */}
       {/* <pre>{JSON.stringify(listing, null, 4)}</pre> */}
       <img className={styles.img} width="100" height="auto" src={rel.images[0]?.uri150} alt="" />

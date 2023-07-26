@@ -24,9 +24,29 @@ export default async function handler(
   console.log('=============================')
   console.log(req.query);
   const url = new URL(req.url as string, 'https://www.foo.com');
-  console.log(url.search);
+  // console.log(req.destroyed);
+  // console.log(req.);
   const market = new DiscogsMarketplace();
-  req.on('close', () => market.cancel());
+  req.on('end', () => {
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log('END')
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!s')
+    market.cancel()
+  });
+  req.on('data', () => {
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log('DATA')
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!s')
+  });
+  req.on('error', () => {
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log('ERROR')
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!s')
+    market.cancel()
+  });
   console.log('=============================')
 
   const q = req.query;
